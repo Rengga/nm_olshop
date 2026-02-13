@@ -5,11 +5,13 @@ import 'package:nm_olshop/pages/detail_product_pages.dart';
 class ProductSection extends StatefulWidget {
   final String title;
   final String searchQuery;
+  final List<Map<String, dynamic>>? customProducts;
 
   const ProductSection({
     super.key,
-    this.title = 'Product', // default
+    this.title = 'Product',
     this.searchQuery = '',
+    this.customProducts,
   });
 
   @override
@@ -28,7 +30,7 @@ class _ProductSectionState extends State<ProductSection> {
   ];
 
   List<Map<String, dynamic>> get filteredProducts {
-    var products = dummyProducts;
+    var products = widget.customProducts ?? dummyProducts;
 
     // FILTER CATEGORY
     if (selectedCategory != 'All') {
@@ -51,7 +53,6 @@ class _ProductSectionState extends State<ProductSection> {
     return products;
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -120,7 +121,7 @@ class _ProductSectionState extends State<ProductSection> {
           // PRODUCT GRID
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 44),
               child: filteredProducts.isEmpty
                   ? const Center(
                       child: Text(

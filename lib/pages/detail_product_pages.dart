@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:nm_olshop/data/cart_data.dart';
+import 'package:nm_olshop/data/wishlist_data.dart';
 
-class DetailProductPage extends StatelessWidget {
+class DetailProductPage extends StatefulWidget {
   final Map<String, dynamic> product;
 
   const DetailProductPage({super.key, required this.product});
 
   @override
+  State<DetailProductPage> createState() => _DetailProductPageState();
+}
+
+class _DetailProductPageState extends State<DetailProductPage> {
+  @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+    final isWishlisted = WishlistData.isInWishlist(product);
+    final isInCart = CartData.isInCart(product);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
 
-      // 🔹 Bottom Button Section
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16),
         color: Colors.white,
@@ -37,20 +47,44 @@ class DetailProductPage extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
+                  backgroundColor: isInCart
+                      ? const Color(0xFF4ECBC4)
+                      : const Color.fromARGB(255, 211, 211, 211),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                onPressed: () {},
-                icon: const Icon(
+                onPressed: () {
+                  setState(() {
+                    if (isInCart) {
+                      CartData.removeFromCart(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Dihapus dari keranjang'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    } else {
+                      CartData.addToCart(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Ditambahkan ke keranjang'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  });
+                },
+                icon: Icon(
                   Icons.shopping_cart_outlined,
-                  color: Colors.black87,
+                  color: isInCart ? Colors.white : Colors.black87,
                 ),
-                label: const Text(
+                label: Text(
                   "Keranjang",
-                  style: TextStyle(color: Colors.black87),
+                  style: TextStyle(
+                    color: isInCart ? Colors.white : Colors.black87,
+                  ),
                 ),
               ),
             ),
@@ -62,27 +96,19 @@ class DetailProductPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 🔹 Image
+              // IMAGE
               Container(
                 margin: const EdgeInsets.all(16),
                 height: 250,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
-                    image: NetworkImage(product["image"]),
+                    image: AssetImage(product["image"]),
                     fit: BoxFit.cover,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 1,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
                 ),
               ),
 
-              // 🔹 Product Info
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -95,9 +121,7 @@ class DetailProductPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 6),
-
                     Text(
                       "Rp ${product["price"]}",
                       style: const TextStyle(
@@ -105,10 +129,9 @@ class DetailProductPage extends StatelessWidget {
                         color: Colors.black87,
                       ),
                     ),
-
                     const SizedBox(height: 16),
 
-                    // 🔹 Icon Actions Row
+                    // ACTION ROW
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -117,8 +140,33 @@ class DetailProductPage extends StatelessWidget {
                           onPressed: () {},
                         ),
                         IconButton(
-                          icon: const Icon(Icons.favorite_border),
-                          onPressed: () {},
+                          icon: Icon(
+                            isWishlisted
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: isWishlisted ? Colors.red : Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              if (isWishlisted) {
+                                WishlistData.removeFromWishlist(product);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Dihapus dari wishlist'),
+                                    duration: Duration(seconds: 1),
+                                  ),
+                                );
+                              } else {
+                                WishlistData.addToWishlist(product);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Ditambahkan ke wishlist'),
+                                    duration: Duration(seconds: 1),
+                                  ),
+                                );
+                              }
+                            });
+                          },
                         ),
                         IconButton(
                           icon: const Icon(Icons.share_outlined),
@@ -133,7 +181,6 @@ class DetailProductPage extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // 🔹 Detail Box
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -148,15 +195,10 @@ class DetailProductPage extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 12),
-                          Text(
-                            product["description"],
-                            style: const TextStyle(fontSize: 14),
-                          ),
+                          Text(product["description"]),
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 0),
                   ],
                 ),
               ),

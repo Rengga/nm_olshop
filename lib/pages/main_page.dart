@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nm_olshop/widgets/bottom_nav.dart';
 import 'home_page.dart';
 import 'wishlist_page.dart';
+import 'cart_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,7 +17,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> pages = const [
     HomePage(),
     WishlistPage(),
-    Center(child: Text("Cart")),
+    CartPage(),
     Center(child: Text("Profile")),
   ];
 
@@ -25,7 +26,10 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: Stack(
         children: [
-          pages[currentIndex],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 0),
+            child: pages[currentIndex],
+          ),
 
           /// Bottom Nav Floating
           Positioned(
