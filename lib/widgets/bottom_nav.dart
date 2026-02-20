@@ -92,7 +92,7 @@ class _NavItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Stack(
-                      alignment: Alignment.topRight,
+                      clipBehavior: Clip.none,
                       children: [
                         Icon(
                           icon,
@@ -100,8 +100,8 @@ class _NavItem extends StatelessWidget {
                         ),
                         if (cartCount > 0)
                           Positioned(
-                            right: 0,
-                            top: 0,
+                            right: -8,
+                            top: -8,
                             child: Container(
                               padding: const EdgeInsets.all(3),
                               decoration: BoxDecoration(

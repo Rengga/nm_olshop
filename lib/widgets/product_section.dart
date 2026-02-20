@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nm_olshop/data/product_list.dart';
 import 'package:nm_olshop/pages/detail_product_pages.dart';
+import '../data/format_util.dart';
 
 class ProductSection extends StatefulWidget {
   final String title;
@@ -56,7 +57,6 @@ class _ProductSectionState extends State<ProductSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // ✅ LANGSUNG Container, bukan GestureDetector
       decoration: const BoxDecoration(
         color: Color(0xFFEDEDED),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -168,14 +168,30 @@ class _ProductSectionState extends State<ProductSection> {
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.image,
-                                        size: 40,
-                                        color: Colors.grey,
+                                    child: Center(
+                                      child: Image.asset(
+                                        product["image"],
+                                        fit: BoxFit.contain,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Icon(
+                                                  Icons.image,
+                                                  size: 40,
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    190,
+                                                    190,
+                                                    190,
+                                                  ),
+                                                ),
                                       ),
                                     ),
                                   ),
@@ -192,7 +208,7 @@ class _ProductSectionState extends State<ProductSection> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  "Rp ${product["price"]}",
+                                  "Rp ${formatRupiah(product["price"])}",
                                   style: const TextStyle(
                                     color: Color(0xFF555555),
                                     fontSize: 14,

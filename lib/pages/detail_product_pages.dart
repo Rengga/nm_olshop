@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nm_olshop/data/cart_data.dart';
 import 'package:nm_olshop/data/wishlist_data.dart';
+import 'package:nm_olshop/pages/payment_page.dart';
+import '../data/format_util.dart';
 
 class DetailProductPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -35,10 +37,21 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PaymentPage(
+                        items: [
+                          {...product, "qty": 1},
+                        ],
+                      ),
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.flash_on, color: Colors.white),
                 label: const Text(
-                  "Beli Sekarang",
+                  "Buy Now",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -61,7 +74,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       CartData.removeFromCart(product);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Dihapus dari keranjang'),
+                          content: Text('Removed from cart'),
                           duration: Duration(seconds: 1),
                         ),
                       );
@@ -69,7 +82,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       CartData.addToCart(product);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Ditambahkan ke keranjang'),
+                          content: Text('Added to cart'),
                           duration: Duration(seconds: 1),
                         ),
                       );
@@ -81,7 +94,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   color: isInCart ? Colors.white : Colors.black87,
                 ),
                 label: Text(
-                  "Keranjang",
+                  "Add to Cart",
                   style: TextStyle(
                     color: isInCart ? Colors.white : Colors.black87,
                   ),
@@ -99,7 +112,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               // IMAGE
               Container(
                 margin: const EdgeInsets.all(16),
-                height: 250,
+                height: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
@@ -123,7 +136,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      "Rp ${product["price"]}",
+                      "Rp ${formatRupiah(product["price"])}",
                       style: const TextStyle(
                         fontSize: 24,
                         color: Colors.black87,
@@ -144,7 +157,9 @@ class _DetailProductPageState extends State<DetailProductPage> {
                             isWishlisted
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: isWishlisted ? Colors.red : Colors.grey,
+                            color: isWishlisted
+                                ? Colors.red
+                                : const Color.fromARGB(255, 32, 32, 32),
                           ),
                           onPressed: () {
                             setState(() {
@@ -152,7 +167,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                 WishlistData.removeFromWishlist(product);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Dihapus dari wishlist'),
+                                    content: Text('Removed from wishlist'),
                                     duration: Duration(seconds: 1),
                                   ),
                                 );
@@ -160,7 +175,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                 WishlistData.addToWishlist(product);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Ditambahkan ke wishlist'),
+                                    content: Text('Added to wishlist'),
                                     duration: Duration(seconds: 1),
                                   ),
                                 );

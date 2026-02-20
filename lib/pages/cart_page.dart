@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nm_olshop/data/cart_data.dart';
+import 'package:nm_olshop/pages/payment_page.dart';
+import '../data/format_util.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -64,7 +66,13 @@ class _CartPageState extends State<CartPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text("Rp ${product["price"]}"),
+                                  Text(
+                                    "Rp ${formatRupiah(product["price"])}",
+                                    style: const TextStyle(
+                                      color: Color(0xFF555555),
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                   const SizedBox(height: 8),
 
                                   Row(
@@ -124,7 +132,7 @@ class _CartPageState extends State<CartPage> {
                                 style: TextStyle(fontSize: 13),
                               ),
                               Text(
-                                "Rp $grandTotal",
+                                "Rp ${formatRupiah(grandTotal)}",
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -144,11 +152,19 @@ class _CartPageState extends State<CartPage> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          onPressed: () {},
                           child: const Text(
                             "Checkout",
                             style: TextStyle(color: Colors.white),
                           ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    PaymentPage(items: CartData.cartItems),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
